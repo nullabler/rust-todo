@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    restart: always
+    working_dir: /usr/src/backend
+    volumes:
+      - './backend:/usr/src/backend'
+    ports:
+      - '7878:7878'
