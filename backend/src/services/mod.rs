@@ -1,4 +1,4 @@
-mod healthcheck;
+pub mod healthcheck;
 // use hyper::{Request, Response, Body, Method, StatusCode};
 
 // mod echo;
