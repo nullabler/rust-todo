@@ -1,7 +1,7 @@
 use hyper::Server;
 use hyper::service::{make_service_fn, service_fn};
 
-mod services;
+mod handlers;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -10,7 +10,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let server = Server::bind(&addr)
         .serve(
             make_service_fn(|_| async {
-                Ok::<_, hyper::Error>(service_fn(services::healthcheck::routes))
+                Ok::<_, hyper::Error>(service_fn(handlers::routes))
             })
         );
 

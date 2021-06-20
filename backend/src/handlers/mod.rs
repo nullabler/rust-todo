@@ -1,7 +1,10 @@
 use hyper::{Body, Method, Request, Response, StatusCode};
 
+mod category;
+
 pub async fn routes(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
     match (req.method(), req.uri().path()) {
+        (&Method::GET, "/category") => category::index(),
         (&Method::GET, "/healthcheck") => get_response_by_status_code(StatusCode::OK),
         _ => get_response_by_status_code(StatusCode::NOT_FOUND)
     }
