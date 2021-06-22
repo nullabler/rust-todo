@@ -1,15 +1,19 @@
-use futures::StreamExt;
-use hyper::{Body, Method, Request, Response, StatusCode};
+use futures::executor::block_on;
+use hyper::{Method, Response, StatusCode};
 use route_recognizer::Params;
+use serde::{Serialize, Deserialize};
 
-use std::{collections::HashMap, convert::TryInto};
-use url::form_urlencoded;
-// use serde::{Serialize, Deserialize};
+use crate::handlers::{get_response_by_status_code, parse_body, ResultResponseHyper, RequestHyper};
 
-use crate::handlers::{get_response_by_status_code, ResultResponse};
 
 pub struct CategoryHandle {
     // list: Vec<Category>
+}
+
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Req {
+    pub name: String
 }
 
 
@@ -28,25 +32,17 @@ pub fn configure() -> CategoryHandle {
 }
 
 impl CategoryHandle {
-    pub fn call(&self, req: Request<Body>, params: &Params) -> ResultResponse {
+    pub fn call(&self, req: RequestHyper, params: &Params) -> ResultResponseHyper {
         match (req.method(), params.find("action")) {
             (&Method::GET, None) => {
                 println!("Req: {:?}", req);
                 Ok(Response::new("category index".into()))
             },
             (&Method::POST, Some("create")) => {
-                // let b = hyper::body::to_bytes(req).await?;
-                // let res = form_urlencoded::parse(b.as_ref())
-                    // .into_owned().collect::<HashMap<String, String>>();
-                let b = hyper::body::to_bytes(&req.body());
-
-                let p = form_urlencoded::parse(b.into())
-                .into_owned()
-                .collect::<HashMap<String, String>>();
-
-                println!("res: {:?}", p);
-
-                Ok(Response::new("category create".into()))
+                let request: Req = serde_json::from_str(block_on(parse_body(req)).as_str()).unwrap();
+                Ok(Response::new(
+                    serde_json::to_string(&request).unwrap().into()
+                ))
             },
             (&_, _) => get_response_by_status_code(StatusCode::NOT_FOUND)
         }

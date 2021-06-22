@@ -1,11 +1,12 @@
 use hyper::{Body, Request, Response, StatusCode};
 use route_recognizer::Router;
 
-type ResultResponse = Result<Response<Body>, hyper::Error>;
+type ResultResponseHyper = Result<Response<Body>, hyper::Error>;
+type RequestHyper = Request<Body>;
 
 mod category;
 
-pub async fn routes(req: Request<Body>) -> ResultResponse {
+pub async fn routes(req: RequestHyper) -> ResultResponseHyper {
     let mut router = Router::new();
     router.add("/category/*action", category::configure());
     router.add("/category", category::configure());
@@ -18,8 +19,14 @@ pub async fn routes(req: Request<Body>) -> ResultResponse {
     }
 }
 
-fn get_response_by_status_code(status_code: StatusCode) -> ResultResponse {
+fn get_response_by_status_code(status_code: StatusCode) -> ResultResponseHyper {
     let mut response = Response::default();
     *response.status_mut() = status_code;
     Ok(response)
+}
+
+async fn parse_body(req: RequestHyper) -> String {
+    String::from_utf8(
+        hyper::body::to_bytes(req).await.unwrap().to_vec()
+    ).unwrap()
 }
