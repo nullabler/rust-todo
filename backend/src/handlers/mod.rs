@@ -2,17 +2,17 @@ use hyper::{Body, Request, Response, StatusCode};
 use route_recognizer::Router;
 use std::sync::{Arc, Mutex};
 
-use crate::Config;
+use crate::App;
 
 type ResultResponseHyper = Result<Response<Body>, hyper::Error>;
 type RequestHyper = Request<Body>;
 
 mod category;
 
-pub async fn routes(config: Arc<Mutex<Config>>, req: RequestHyper) -> ResultResponseHyper {
+pub async fn routes(app: Arc<Mutex<App>>, req: RequestHyper) -> ResultResponseHyper {
     let mut router = Router::new();
-    router.add("/category/*action", category::configure(Arc::clone(&config)));
-    router.add("/category", category::configure(Arc::clone(&config)));
+    router.add("/category/*action", category::configure(Arc::clone(&app)));
+    router.add("/category", category::configure(Arc::clone(&app)));
 
     match router.recognize(req.uri().path()) {
         Ok(handle) => {
