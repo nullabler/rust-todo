@@ -2,12 +2,12 @@ use futures::executor::block_on;
 use hyper::{Method, Response, StatusCode};
 use route_recognizer::Params;
 use serde::{Serialize, Deserialize};
-use std::sync::{Arc, Mutex};
+use crate::{RequestApp, get_response_by_status_code, parse_body, ResultResponseHyper, RequestHyper};
+use super::Handler;
 
-use crate::{App, handlers::{get_response_by_status_code, parse_body, ResultResponseHyper, RequestHyper}};
 
-pub struct CategoryHandle {
-    app: Arc<Mutex<App>>
+pub struct CategoryHandler {
+    app: RequestApp
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -21,14 +21,16 @@ struct Category {
     name: String
 }
 
-pub fn configure(app: Arc<Mutex<App>>) -> CategoryHandle {
-    CategoryHandle {
-        app
-    }
-}
 
-impl CategoryHandle {
-    pub fn call(&self, req: RequestHyper, params: &Params) -> ResultResponseHyper {
+impl Handler for CategoryHandler {
+    fn new (app: RequestApp) -> CategoryHandler {
+        CategoryHandler {
+            app
+        }
+    }
+
+    fn call (&self, req: RequestHyper, params: &Params) -> ResultResponseHyper {
+        println!("params: {:?}", &params.find("action"));
         match (req.method(), params.find("action")) {
             (&Method::GET, None) => {
                 let mut app = self.app.lock().unwrap();
@@ -54,15 +56,4 @@ impl CategoryHandle {
             (&_, _) => get_response_by_status_code(StatusCode::NOT_FOUND)
         }
     }
-
-    // fn push_category(&mut self, name: String) {
-    //     let mut id: i32 = 1;
-    //     for (_key, val) in self.cache.iter() {
-    //         if id < *val {
-    //             id = *val;
-    //         }
-    //     }
-
-    //     &self.cache.entry(name).or_insert(id);
-    // }
 }

@@ -1,13 +1,18 @@
 mod app;
 mod handlers;
+mod route;
 
 use app::App;
-use hyper::{Server, Body, Request};
+use hyper::{Server, Body, Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
-use std::{collections::HashMap, sync::{
+use std::sync::{
     Arc,
     Mutex,
-}};
+};
+
+type ResultResponseHyper = Result<Response<Body>, hyper::Error>;
+type RequestHyper = Request<Body>;
+type RequestApp = Arc<Mutex<App>>;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -17,9 +22,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let make_service = make_service_fn(move |_| {
         let app = Arc::clone(&app);
         async move {
-            Ok::<_, hyper::Error>(service_fn(move |_req: Request<Body>| {
+            Ok::<_, hyper::Error>(service_fn(move |_req: RequestHyper| {
                 let app = Arc::clone(&app);
-                handlers::routes(app, _req)
+                route::configure(app, _req)
             }))
         }
     });
@@ -29,10 +34,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     println!("Listening on http://{}", addr);
 
-    // server.await?;
-
-    // Ok(())
-    // println!("{:?}", server);
     if let Err(e) = server.await {
         eprintln!("server error: {}", e);
     }
@@ -40,13 +41,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     Ok(())
 }
 
-// async fn test(v: Arc<Mutex<Vec<i32>>>, _req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
-//     let mut v = v.lock().unwrap();
-//     v.push(5);
-//     println!("{:?}", v);
-//     Ok(
-//         Response::new(
-//             Body::from(format!("Request: red"))
-//         )
-//     )
-// }
+fn get_response_by_status_code(status_code: StatusCode) -> ResultResponseHyper {
+    let mut response = Response::default();
+    *response.status_mut() = status_code;
+    Ok(response)
+}
+
+async fn parse_body(req: RequestHyper) -> String {
+    String::from_utf8(
+        hyper::body::to_bytes(req).await.unwrap().to_vec()
+    ).unwrap()
+}
