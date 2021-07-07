@@ -1,3 +1,5 @@
+// use mysql_async::prelude::*;
+
 mod app;
 mod handlers;
 mod route;
@@ -10,12 +12,26 @@ use std::sync::{
     Mutex,
 };
 
+
+
 type ResultResponseHyper = Result<Response<Body>, hyper::Error>;
 type RequestHyper = Request<Body>;
 type RequestApp = Arc<Mutex<App>>;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    // let database_url = "mysql://root:root@mysql:3306/todo";
+    // let pool = mysql_async::Pool::new(database_url);
+    // let mut conn = pool.get_conn().await?;
+
+    // conn.query_drop(
+    //     r"CREATE TABLE payment (
+    //         customer_id int not null,
+    //         amount int not null,
+    //         account_name text
+    //     )"
+    // ).await?;
+
     let app = Arc::new(Mutex::new(App::new()));
     let addr = app.lock().unwrap().config.addr().parse().unwrap();
 
