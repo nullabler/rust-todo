@@ -1,0 +1,11 @@
+#!/bin/sh
+
+until mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD -D $MYSQL_DATABASE --silent -e "show databases;"
+do
+  echo "Waiting for database connection..."
+  sleep 5
+done
+
+mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD -D $MYSQL_DATABASE < /backend/db/main.sql
+
+cargo watch --exec run
