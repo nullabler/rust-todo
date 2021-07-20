@@ -38,6 +38,8 @@ impl Handler for CategoryHandler {
                 app.cache.v.push(9);
                 println!("cache root: {:?}", app.cache);
                 println!("Req: {:?}", req);
+                println!("db_url: {:?}", app.config.db_url());
+                app.db.query();
                 Ok(Response::new(
                     "Ok".into()
                     // serde_json::to_string(&self.list).unwrap().into()

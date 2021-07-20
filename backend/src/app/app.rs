@@ -8,10 +8,12 @@ pub struct App {
 
 impl App {
     pub fn new() -> App {
+        let config = Config::new();
+        let db = Db::new(config.db_url());
         App {
-            config: Config::new(),
+            config,
             cache: Cache::new(),
-            db: Db::new("mysql://root:root@mysql:3306/todo"),
+            db,
         }
     }
 }

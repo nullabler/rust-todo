@@ -22,4 +22,16 @@ impl Db {
             pool: mysql_async::Pool::new(db_url),
         }
     }
+
+    pub async fn query(&self) {
+        // println!("{:?}", &self.pool.get_conn().await);
+        let _connect = &mut self.pool.get_conn().await.unwrap();
+        &_connect.query_drop(
+            r"CREATE TABLE payment (
+            customer_id int not null,
+            amount int not null,
+            account_name text
+        )"
+        ).await.unwrap();
+    }
 }
