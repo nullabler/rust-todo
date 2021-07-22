@@ -9,7 +9,7 @@ pub struct App {
 impl App {
     pub fn new() -> App {
         let config = Config::new();
-        let db = Db::new(config.db_url());
+        let db = Db::new(&config);
         App {
             config,
             cache: Cache::new(),

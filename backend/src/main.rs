@@ -1,8 +1,11 @@
 // use mysql_async::prelude::*;
+#[macro_use]
+extern crate diesel;
 
 mod app;
 mod handlers;
 mod route;
+mod models;
 
 use app::App;
 use hyper::{Server, Body, Request, Response, StatusCode};

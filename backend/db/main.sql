@@ -13,4 +13,11 @@ CREATE TABLE IF NOT EXISTS task (
     created_at DATETIME NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (category_id) REFERENCES category (id)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+
+CREATE TABLE posts (
+    id INT AUTO_INCREMENT NOT NULL,
+    title VARCHAR(50) NOT NULL,
+    body TEXT NOT NULL,
+    PRIMARY KEY(id)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;

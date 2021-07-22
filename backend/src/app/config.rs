@@ -14,18 +14,13 @@ impl Config {
     }
 
     fn get_db_url() -> String {
-        let mut db_url = String::new();
-        db_url.push_str("mysql://");
-        db_url.push_str(env::var("MYSQL_USER").unwrap().as_str());
-        db_url.push(':');
-        db_url.push_str(env::var("MYSQL_PASSWORD").unwrap().as_str());
-        db_url.push_str("@");
-        db_url.push_str(env::var("MYSQL_HOST").unwrap().as_str());
-        db_url.push(':');
-        db_url.push_str(env::var("MYSQL_PORT").unwrap().as_str());
-        db_url.push('/');
-        db_url.push_str(env::var("MYSQL_DATABASE").unwrap().as_str());
-        db_url
+        format!("mysql://{user}:{password}@{host}:{port}/{database}",
+                user = env::var("MYSQL_USER").unwrap(),
+                password = env::var("MYSQL_PASSWORD").unwrap(),
+                host = env::var("MYSQL_HOST").unwrap(),
+                port = env::var("MYSQL_PORT").unwrap(),
+                database = env::var("MYSQL_DATABASE").unwrap(),
+        )
     }
 
     pub fn addr(&self) -> &str {

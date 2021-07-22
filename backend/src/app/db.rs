@@ -1,37 +1,32 @@
-use mysql_async::{Pool, prelude::*};
+// extern crate diesel;
+// extern crate dotenv;
+
+use crate::models::posts::query as queryR;
+use diesel::prelude::*;
+use crate::app::config::Config;
+
+use diesel::mysql::MysqlConnection;
+
 
 pub struct Db {
-    pool: Pool
+    connect: MysqlConnection
 }
 
 impl Db {
-    pub fn new (db_url: &str) -> Self {
-        // let database_url = "mysql://root:root@mysql:3306/todo";
-        // let pool = mysql_async::Pool::new(database_url);
-        // let mut conn = pool.get_conn().await?;
-
-        // conn.query_drop(
-        //     r"CREATE TABLE payment (
-        //     customer_id int not null,
-        //     amount int not null,
-        //     account_name text
-        // )"
-        // ).await?;
-
+    pub fn new (config: &Config) -> Self {
         Db {
-            pool: mysql_async::Pool::new(db_url),
+            connect: MysqlConnection::establish(config.db_url()).expect(&format!("Error connecting to {}", config.db_url()))
         }
     }
 
-    pub async fn query(&self) {
-        // println!("{:?}", &self.pool.get_conn().await);
-        let _connect = &mut self.pool.get_conn().await.unwrap();
-        &_connect.query_drop(
-            r"CREATE TABLE payment (
-            customer_id int not null,
-            amount int not null,
-            account_name text
-        )"
-        ).await.unwrap();
+    pub fn query(&self) {
+        queryR(&self.connect);
+        // use super::schema::posts::dsl::*;
+        // let results = posts
+        //     .limit(5)
+        //     .load::<Post>(&self.connect)
+        //     .expect("Error loading posts");
+
+        // println!("Displaying {} posts", results.len());
     }
 }
