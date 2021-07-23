@@ -1,7 +1,4 @@
-// extern crate diesel;
-// extern crate dotenv;
-
-use crate::models::posts::query as queryR;
+// use crate::models::posts::PostModel;
 use diesel::prelude::*;
 use crate::app::config::Config;
 
@@ -9,24 +6,16 @@ use diesel::mysql::MysqlConnection;
 
 
 pub struct Db {
-    connect: MysqlConnection
+    connect: MysqlConnection,
+    // post: PostModel
 }
 
 impl Db {
     pub fn new (config: &Config) -> Self {
+        // let connect = MysqlConnection::establish(config.db_url()).expect(&format!("Error connecting to {}", config.db_url()));
         Db {
-            connect: MysqlConnection::establish(config.db_url()).expect(&format!("Error connecting to {}", config.db_url()))
+            connect: MysqlConnection::establish(config.db_url()).expect(&format!("Error connecting to {}", config.db_url())),
+            // post: PostModel::new(&connect)
         }
-    }
-
-    pub fn query(&self) {
-        queryR(&self.connect);
-        // use super::schema::posts::dsl::*;
-        // let results = posts
-        //     .limit(5)
-        //     .load::<Post>(&self.connect)
-        //     .expect("Error loading posts");
-
-        // println!("Displaying {} posts", results.len());
     }
 }
