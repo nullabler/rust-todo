@@ -1,8 +1,8 @@
 use diesel::prelude::*;
 
-use diesel::Queryable;
 use diesel::mysql::MysqlConnection;
-// use crate::app::db::Db;
+use diesel::Queryable;
+use crate::app::db;
 
 #[derive(Queryable)]
 pub struct Post {
@@ -12,23 +12,38 @@ pub struct Post {
 }
 
 pub struct PostModel {
-    connect: MysqlConnection
+    connect: MysqlConnection,
 }
 
 impl PostModel {
-    pub fn new(connect: MysqlConnection) -> Self {
-        PostModel {
-            connect
-        }
-    }
-
-    pub fn query(&self) {
+    fn query(&self) { 
         use super::schema::posts::dsl::*;
+
+        let connect: Result<MysqlConnection, ConnectionError> = db::Db::CONNECTION.connect;
+
         let results = posts
             .limit(5)
-            .load::<Post>(&self.connect)
+            .load::<Post>(&connect.unwrap())
             .expect("Error loading posts");
 
         println!("Displaying {} posts", results.len());
     }
 }
+//
+// impl PostModel {
+//     pub fn new(connect: MysqlConnection) -> Self {
+//         PostModel {
+//             connect
+//         }
+//     }
+
+//     pub fn query(&self) {
+//         use super::schema::posts::dsl::*;
+//         let results = posts
+//             .limit(5)
+//             .load::<Post>(&self.connect)
+//             .expect("Error loading posts");
+
+//         println!("Displaying {} posts", results.len());
+//     }
+// }

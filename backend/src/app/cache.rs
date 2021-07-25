@@ -7,7 +7,7 @@ pub struct Cache {
 }
 
 impl Cache {
-    pub fn new () -> Self {
+    pub fn new() -> Self {
         Cache {
             response: HashMap::new(),
             v: Vec::new(),

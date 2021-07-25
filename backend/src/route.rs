@@ -1,7 +1,11 @@
-use std::sync::Arc;
+use crate::{
+    get_response_by_status_code,
+    handlers::{CategoryHandler, Handler},
+    RequestApp, RequestHyper, ResultResponseHyper,
+};
 use hyper::StatusCode;
 use route_recognizer::Router;
-use crate::{RequestApp, RequestHyper, ResultResponseHyper, get_response_by_status_code, handlers::{CategoryHandler, Handler}};
+use std::sync::Arc;
 
 pub async fn configure(app: RequestApp, req: RequestHyper) -> ResultResponseHyper {
     let mut router = Router::new();
@@ -19,10 +23,10 @@ pub async fn configure(app: RequestApp, req: RequestHyper) -> ResultResponseHype
                 &"category" => {
                     let q = CategoryHandler::new(Arc::clone(&app));
                     q.call(req, handle.params())
-                },
-                &&_ => get_response_by_status_code(StatusCode::NOT_FOUND)
+                }
+                &&_ => get_response_by_status_code(StatusCode::NOT_FOUND),
             }
-        },
-        _ => get_response_by_status_code(StatusCode::NOT_FOUND)
+        }
+        _ => get_response_by_status_code(StatusCode::NOT_FOUND),
     }
 }

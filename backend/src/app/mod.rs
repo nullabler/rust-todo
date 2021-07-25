@@ -1,6 +1,6 @@
 mod app;
-mod config;
 mod cache;
-mod db;
+mod config;
+pub mod db;
 
 pub use app::App;

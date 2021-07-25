@@ -4,18 +4,13 @@ extern crate diesel;
 
 mod app;
 mod handlers;
-mod route;
 mod models;
+mod route;
 
 use app::App;
-use hyper::{Server, Body, Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
-use std::sync::{
-    Arc,
-    Mutex,
-};
-
-
+use hyper::{Body, Request, Response, Server, StatusCode};
+use std::sync::{Arc, Mutex};
 
 type ResultResponseHyper = Result<Response<Body>, hyper::Error>;
 type RequestHyper = Request<Body>;
@@ -48,7 +43,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         }
     });
 
-
     let server = Server::bind(&addr).serve(make_service);
 
     println!("Listening on http://{}", addr);
@@ -67,7 +61,5 @@ fn get_response_by_status_code(status_code: StatusCode) -> ResultResponseHyper {
 }
 
 async fn parse_body(req: RequestHyper) -> String {
-    String::from_utf8(
-        hyper::body::to_bytes(req).await.unwrap().to_vec()
-    ).unwrap()
+    String::from_utf8(hyper::body::to_bytes(req).await.unwrap().to_vec()).unwrap()
 }
