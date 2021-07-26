@@ -1,4 +1,3 @@
-// use mysql_async::prelude::*;
 #[macro_use]
 extern crate diesel;
 
@@ -10,10 +9,10 @@ mod models;
 use app::App;
 use hyper::{Server, Body, Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
-use std::{net::SocketAddr, sync::{
+use std::sync::{
     Arc,
     Mutex,
-}};
+};
 
 
 
@@ -23,21 +22,9 @@ type RequestApp = Arc<Mutex<App>>;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    // let database_url = "mysql://root:root@mysql:3306/todo";
-    // let pool = mysql_async::Pool::new(database_url);
-    // let mut conn = pool.get_conn().await?;
-
-    // conn.query_drop(
-    //     r"CREATE TABLE payment (
-    //         customer_id int not null,
-    //         amount int not null,
-    //         account_name text
-    //     )"
-    // ).await?;
 
     let app = Arc::new(Mutex::new(App::new()));
-    let addr: SocketAddr = ([0, 0, 0, 0], 7878).into();
-    //app.lock().unwrap().config.addr().parse().unwrap();
+    let addr = app.lock().unwrap().config.addr().parse().unwrap();
 
     let make_service = make_service_fn(move |_| {
         let app = Arc::clone(&app);

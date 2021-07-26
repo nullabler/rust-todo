@@ -1,9 +1,9 @@
 // use std::cell::RefCell;
-use std::sync::{Arc, Mutex};
-use crate::app::Db;
+// use std::sync::{Arc, Mutex};
+// use crate::app::Db;
 
 pub trait Model {
-    fn new(db: Arc<Mutex<Db>>) -> Self;
+    fn new() -> Self;
 
     // fn db(&self) -> &Arc<Mutex<Db>>;
 
