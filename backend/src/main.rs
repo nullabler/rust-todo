@@ -10,10 +10,10 @@ mod models;
 use app::App;
 use hyper::{Server, Body, Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
-use std::sync::{
+use std::{net::SocketAddr, sync::{
     Arc,
     Mutex,
-};
+}};
 
 
 
@@ -36,7 +36,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // ).await?;
 
     let app = Arc::new(Mutex::new(App::new()));
-    let addr = app.lock().unwrap().config.addr().parse().unwrap();
+    let addr: SocketAddr = ([0, 0, 0, 0], 7878).into();
+    //app.lock().unwrap().config.addr().parse().unwrap();
 
     let make_service = make_service_fn(move |_| {
         let app = Arc::clone(&app);
