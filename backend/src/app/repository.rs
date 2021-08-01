@@ -1,13 +1,15 @@
-use crate::models::{model::Model, posts::PostModel};
+use crate::models::{CategoryModel, TaskModel, Model};
 
 pub struct Repository {
-    pub post: PostModel
+    pub category: CategoryModel,
+    pub task: TaskModel,
 }
 
 impl Repository {
     pub fn new() -> Self {
         Repository {
-            post: Model::new(),
+            category: Model::new(),
+            task: Model::new(),
         }
     }
 }

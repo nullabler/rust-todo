@@ -1,5 +1,5 @@
-mod category;
+mod category_handler;
 mod handler;
 
-pub use category::CategoryHandler;
+pub use category_handler::CategoryHandler;
 pub use handler::Handler;
