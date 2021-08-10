@@ -1,24 +1,15 @@
 use diesel::prelude::*;
 
-use serde::{Serialize, Deserialize};
 use diesel::Queryable;
 use super::Model;
 use crate::app::Db;
+use chrono::NaiveDateTime;
 
-table! {
-    category (id) {
-        id -> Integer,
-        name -> Varchar,
-        created_at -> Varchar,
-    }
-}
-
-
-#[derive(Queryable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Debug)]
 pub struct Category {
     pub id: i32,
     pub name: String,
-    pub created_at: String,
+    pub created_at: NaiveDateTime,
 }
 
 pub struct CategoryModel {}
@@ -31,7 +22,7 @@ impl Model for CategoryModel {
 
 impl CategoryModel {
     pub fn query(&self, db: &Db) -> Vec<Category> {
-        use super::category_model::category::dsl::*;
+        use crate::schema::category::dsl::*;
 
         let results: Vec<Category> = category
             .limit(5)

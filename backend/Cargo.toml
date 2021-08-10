@@ -16,6 +16,6 @@ route-recognizer = "0.3"
 serde = { version = "1.0", features = ["derive"]}
 serde_json = "1.0"
 url = "2.1"
-mysql_async = "0.27"
-diesel = { version = "1.4.4", features = ["mysql"] }
+chrono = "0.4"
+diesel = { version = "1.4.4", features = ["mysql", "chrono"] }
 dotenv = "0.15.0"

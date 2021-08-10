@@ -40,12 +40,11 @@ impl Handler for CategoryHandler {
                 println!("Req: {:?}", req);
                 println!("db_url: {:?}", app.config.db_url());
                 let category_list = app.repository.category.query(&app.db);
-                println!("{:?}", category_list);
-
+                dbg!(category_list);
                 // app.repository.task.query(&app.db);
                 Ok(Response::new(
-                    // "Ok".into()
-                    serde_json::to_string(&category_list).unwrap().into()
+                    "Ok".into()
+                    // serde_json::to_string(&category_list).unwrap().into()
                 ))
             },
 

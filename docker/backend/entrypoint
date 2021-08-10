@@ -6,6 +6,5 @@ do
   sleep 5
 done
 
-mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD -D $MYSQL_DATABASE < /backend/db/main.sql
-
+diesel migration run
 cargo watch --exec run

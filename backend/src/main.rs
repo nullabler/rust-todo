@@ -5,6 +5,7 @@ mod app;
 mod handlers;
 mod route;
 mod models;
+pub mod schema;
 
 use app::App;
 use hyper::{Server, Body, Request, Response, StatusCode};
