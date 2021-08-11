@@ -1,6 +1,5 @@
 use diesel::prelude::*;
 
-use diesel::Queryable;
 use chrono::NaiveDateTime;
 use super::Model;
 use crate::app::Db;

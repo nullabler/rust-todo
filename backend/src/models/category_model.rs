@@ -1,11 +1,12 @@
 use diesel::prelude::*;
 
-use diesel::Queryable;
 use super::Model;
 use crate::app::Db;
-use chrono::NaiveDateTime;
+use chrono::{NaiveDateTime, NaiveDate};
+use crate::schema::category;
 
-#[derive(Queryable, Debug)]
+#[derive(Queryable, Insertable, Debug)]
+#[table_name="category"]
 pub struct Category {
     pub id: i32,
     pub name: String,
@@ -36,4 +37,19 @@ impl CategoryModel {
         // results;
         // println!("Displaying {} category", results.len());
     }
+
+    // pub fn create(&self, db: &Db) {
+    //     // use crate::schema::category;
+
+    //     let new_category = Category {
+    //         id: 1,
+    //         name: "qwe".to_string(),
+    //         created_at: NaiveDate::from_ymd(2016, 7, 8).and_hms(9, 10, 11),
+    //     };
+
+    //     diesel::insert_into(category::table)
+    //         .values(&new_category)
+    //         .get_result(&db.connect)
+    //         .expect("Error saving new category");
+    // }
 }
