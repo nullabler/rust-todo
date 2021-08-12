@@ -1,42 +1,44 @@
-use diesel::prelude::*;
-
 use super::Model;
-use crate::app::Db;
-use chrono::{NaiveDateTime, NaiveDate};
+use chrono::NaiveDateTime;
 use crate::schema::category;
 
-#[derive(Queryable, Insertable, Debug)]
-#[table_name="category"]
+#[derive(Queryable, Debug)]
 pub struct Category {
     pub id: i32,
     pub name: String,
     pub created_at: NaiveDateTime,
 }
 
-pub struct CategoryModel {}
-
-impl Model for CategoryModel {
-    fn new() -> Self {
-        CategoryModel {}
-    }
+#[derive(Insertable)]
+#[table_name="category"]
+pub struct NewCategory {
+    pub name: String
 }
 
-impl CategoryModel {
-    pub fn query(&self, db: &Db) -> Vec<Category> {
-        use crate::schema::category::dsl::*;
+// pub struct CategoryModel {}
 
-        let results: Vec<Category> = category
-            .limit(5)
-            .load(&db.connect)
-            .expect("Error loading category");
+// impl Model for CategoryModel {
+//     fn new() -> Self {
+//         CategoryModel {}
+//     }
+// }
+
+// impl CategoryModel {
+//     pub fn query(&self, db: &Db) -> Vec<Category> {
+//         use crate::schema::category::dsl::*;
+
+//         let results: Vec<Category> = category
+//             .limit(5)
+//             .load(&db.connect)
+//             .expect("Error loading category");
 
         // results;
         // println!("{:?}", results.get(0));
 
-        return results;
+        // return results;
         // results;
         // println!("Displaying {} category", results.len());
-    }
+    // }
 
     // pub fn create(&self, db: &Db) {
     //     // use crate::schema::category;
@@ -52,4 +54,4 @@ impl CategoryModel {
     //         .get_result(&db.connect)
     //         .expect("Error saving new category");
     // }
-}
+// }

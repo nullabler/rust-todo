@@ -1,10 +1,9 @@
-use super::{cache::Cache, config::Config, db::Db, repository::Repository};
+use super::{cache::Cache, config::Config, db::Db};
 
 pub struct App {
     pub config: Config,
     pub cache: Cache,
-    pub db: Db,
-    pub repository: Repository
+    pub db: Db
 }
 
 impl App {
@@ -15,8 +14,7 @@ impl App {
         App {
             config,
             cache: Cache::new(),
-            db,
-            repository: Repository::new(),
+            db
         }
     }
 }
